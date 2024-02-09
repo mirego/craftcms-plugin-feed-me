@@ -9,6 +9,7 @@ use craft\base\Model;
 use craft\feedme\base\Element;
 use craft\feedme\base\ElementInterface;
 use craft\feedme\helpers\DuplicateHelper;
+use craft\feedme\helpers\HttpHelper;
 use craft\feedme\Plugin;
 use DateTime;
 
@@ -44,6 +45,21 @@ class FeedModel extends Model
      * @var string|null
      */
     public ?string $feedType = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $feedMethod = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $feedHeaders = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $feedPayload = null;
 
     /**
      * @var string|null
@@ -250,8 +266,16 @@ class FeedModel extends Model
     public function rules(): array
     {
         return [
-            [['name', 'feedUrl', 'feedType', 'elementType', 'duplicateHandle', 'passkey'], 'required'],
+            [['name', 'feedUrl', 'feedType', 'feedMethod', 'elementType', 'duplicateHandle', 'passkey'], 'required'],
             [['backup', 'setEmptyValues'], 'boolean'],
+            [['feedHeaders'], 'validateHeaders']
         ];
+    }
+
+    public function validateHeaders($attribute, $params, $validator)
+    {
+        if (!HttpHelper::validate_headers($this->$attribute)) {
+            $this->addError($attribute, Craft::t('feed-me', 'Wrong headers format.'));
+        }
     }
 }

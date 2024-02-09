@@ -22,6 +22,7 @@ use craft\feedme\Plugin;
 use craft\helpers\Component as ComponentHelper;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\RequestOptions;
 use yii\base\Event;
 use yii\base\InvalidConfigException;
 
@@ -207,8 +208,19 @@ class DataTypes extends Component
         try {
             $client = Plugin::$plugin->service->createGuzzleClient($feedId);
             $options = Plugin::$plugin->service->getRequestOptions($feedId);
+            $method = Plugin::$plugin->service->getRequestMethod($feedId);
+            $headers = Plugin::$plugin->service->getRequestHeaders($feedId);
+            $body = Plugin::$plugin->service->getRequestBody($feedId);
 
-            $resp = $client->request('GET', $url, $options);
+            if (!empty($headers)) {
+                $options[RequestOptions::HEADERS] = $headers;
+            }
+
+            if (!empty($body)) {
+                $options[RequestOptions::BODY] = $body;
+            }
+
+            $resp = $client->request($method, $url, $options);
             $data = (string)$resp->getBody();
 
             // Save headers for later

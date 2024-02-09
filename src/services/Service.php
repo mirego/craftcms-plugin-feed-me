@@ -6,6 +6,7 @@ use ArrayAccess;
 use Cake\Utility\Hash;
 use Craft;
 use craft\base\Component;
+use craft\feedme\helpers\HttpHelper;
 use craft\feedme\Plugin;
 use craft\helpers\DateTimeHelper;
 use DateTime;
@@ -58,6 +59,36 @@ class Service extends Component
     public function getRequestOptions($feedId = null): mixed
     {
         return $this->getConfig('requestOptions', $feedId);
+    }
+
+    public function getRequestMethod($feedId = null): string
+    {
+        if ($feedId) {
+            $feed = Plugin::$plugin->feeds->getFeedById($feedId);
+            return Hash::get($feed, 'feedMethod', 'GET');
+        }
+
+        return 'GET';
+    }
+
+    public function getRequestHeaders($feedId = null): mixed
+    {
+        if ($feedId) {
+            $feed = Plugin::$plugin->feeds->getFeedById($feedId);
+            return HttpHelper::parse_headers(Hash::get($feed, 'feedHeaders'));
+        }
+
+        return null;
+    }
+
+    public function getRequestBody($feedId = null): ?string
+    {
+        if ($feedId) {
+            $feed = Plugin::$plugin->feeds->getFeedById($feedId);
+            return Hash::get($feed, 'feedPayload');
+        }
+
+        return null;
     }
 
     /**
