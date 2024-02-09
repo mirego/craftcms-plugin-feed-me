@@ -71,6 +71,40 @@
         required: true,
     }) }}
 
+    {{ forms.selectField({
+        label: "Request Method"|t('feed-me'),
+        instructions: 'Choose the HTTP Request method to use.'|t('feed-me'),
+        id: 'feedMethod',
+        name: 'feedMethod',
+        options: {
+            GET: 'GET',
+            POST: 'POST'
+        },
+        value: feed.feedMethod ?? 'GET',
+        errors: feed.getErrors('feedMethod'),
+        required: true,
+    }) }}
+
+    {{ forms.textareaField({
+        label: "Request Headers"|t('feed-me'),
+        instructions: 'Customize headers of the HTTP Request if needed.'|t('feed-me'),
+        id: 'feedHeaders',
+        name: 'feedHeaders',
+        rows: 5,
+        value: feed.feedHeaders ?? '',
+        errors: feed.getErrors('feedHeaders'),
+    }) }}
+
+    {{ forms.textareaField({
+        label: "Request Payload"|t('feed-me'),
+        instructions: 'Pass a string body content to the HTTP Request if needed.'|t('feed-me'),
+        id: 'feedPayload',
+        name: 'feedPayload',
+        rows: 10,
+        value: feed.feedPayload ?? '',
+        errors: feed.getErrors('feedPayload'),
+    }) }}
+
     <hr>
 
     {% set elementsList = [] %}
@@ -221,3 +255,26 @@
 {% block footerButton %}
     {{ buttons }}
 {% endblock %}
+
+{#
+https://swapi-graphql.netlify.app/.netlify/functions/index
+
+{"query":"
+query ExampleQuery {
+    allPeople {
+        people {
+            name
+            birthYear
+            height
+            mass
+            species {
+                name
+            }
+            homeworld {
+                name
+            }
+        }
+    }
+}"}
+
+#}

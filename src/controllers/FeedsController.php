@@ -424,6 +424,9 @@ class FeedsController extends Controller
         $feed->name = $request->getBodyParam('name', $feed->name);
         $feed->feedUrl = $request->getBodyParam('feedUrl', $feed->feedUrl);
         $feed->feedType = $request->getBodyParam('feedType', $feed->feedType);
+        $feed->feedMethod = $request->getBodyParam('feedMethod', $feed->feedMethod);
+        $feed->feedHeaders = $request->getBodyParam('feedHeaders', $feed->feedHeaders);
+        $feed->feedPayload = $request->getBodyParam('feedPayload', $feed->feedPayload);
         $feed->primaryElement = $request->getBodyParam('primaryElement', $feed->primaryElement);
         $feed->elementType = $request->getBodyParam('elementType', $feed->elementType);
         $feed->elementGroup = $request->getBodyParam('elementGroup', $feed->elementGroup);
